@@ -56,7 +56,13 @@ namespace {
         const AppId_t current = resp.returnValue();
         if (current == realAppId) return;
         resp.set_returnValue(realAppId);
-        LOG_IPC_INFO("GetAppID: spoof response {} -> {}", current, realAppId);
+        LOG_IPC_INFO(
+    "GetAppID: pipe={} pid={} current={} real={} onlinefix={}",
+    pipe ? pipe->DebugString() : "null",
+    pipe ? pipe->m_clientPID : 0,
+    current,
+    realAppId,
+    Hooks_Misc::IsOnlineFixActive());
     }
 
     // ════════════════════════════════════════════════════════════════

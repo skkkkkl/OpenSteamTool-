@@ -124,12 +124,31 @@ namespace Hooks_Misc {
     }
 
     
-    AppId_t ResolveAppId() {
-        const AppId_t realAppId = g_OnlineFixRealAppId.load(std::memory_order_relaxed);
-        if (realAppId != 0) return realAppId;
-        return GetAppIDForCurrentPipeWrap();
+AppId_t ResolveAppId() {
+    const AppId_t realAppId =
+        g_OnlineFixRealAppId.load(std::memory_order_relaxed);
+
+    const bool networkingActive =
+        g_NetworkingSocketsActive.load(std::memory_order_relaxed);
+
+    AppId_t pipeAppId = 0;
+
+    if (realAppId == 0) {
+        pipeAppId = GetAppIDForCurrentPipeWrap();
     }
 
+    AppId_t result = realAppId != 0 ? realAppId : pipeAppId;
+
+    LOG_MISC_DEBUG(
+        "ResolveAppId: real={} pipe={} result={} networkingActive={} tid={}",
+        realAppId,
+        pipeAppId,
+        result,
+        networkingActive,
+        ::GetCurrentThreadId());
+
+    return result;
+}
     bool IsOnlineFixActive() {
         return g_OnlineFixRealAppId.load(std::memory_order_relaxed) != 0;
     }

@@ -4,6 +4,7 @@
 #include "dllmain.h"
 
 #include <atomic>
+#include <Windows.h>
 #include <mutex>
 #include <unordered_map>
 

@@ -100,8 +100,12 @@ namespace {
         resp.set_piSignature(ticket.signatureOffset);
         resp.set_pcbSignature(ticket.signatureSize);
 
-        LOG_IPC_DEBUG("IClientUser::GetAppOwnershipTicketExtendedData: AppId={} {}", 
-                        appId,resp.DebugString());
+        LOG_IPC_DEBUG(
+    "IClientUser::GetAppOwnershipTicketExtendedData: "
+    "pipe={} pid={} {}",
+    pipe ? pipe->DebugString() : "null",
+    pipe ? pipe->m_clientPID : 0,
+    req.DebugString());
     }
 
     // [Post-Handler]: IClientUser::RequestEncryptedAppTicket
